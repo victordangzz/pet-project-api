@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0a0a52; /* xanh đậm như hero */
+        color: #ffffff;
+      }
+      table {
+        border-spacing: 0;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      a {
+        text-decoration: none;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 32px;
+        color: #000000;
+      }
+      .btn {
+        display: inline-block;
+        padding: 14px 28px;
+        background-color: #ff5a2c; /* cam nút CTA */
+        color: #ffffff;
+        border-radius: 8px;
+        font-weight: bold;
+      }
+      .footer {
+        text-align: center;
+        color: #ffffff;
+        font-size: 14px;
+        margin-top: 40px;
+      }
+      @media (max-width: 600px) {
+        .card {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <table role="presentation" class="container">
+      <tr>
+        <td align="center" style="padding: 24px 0">
+          <img src="{{logo}}" alt="PetCourse Logo" width="120" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="card">
+            <h1 style="color: #0a0a52; font-size: 26px; margin: 0 0 16px 0; font-weight: 700">
+              {{title}}
+            </h1>
+            <p style="font-size: 16px; line-height: 24px; margin: 0 0 24px 0">{{content}}</p>
+            <a href="{{link}}" class="btn">{{titleLink}}</a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="footer">
+          <p>🐾 PetCourse – cùng bạn huấn luyện thú cưng mỗi ngày</p>
+          <p style="font-size: 12px">© 2025 PetCourse. All rights reserved.</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
