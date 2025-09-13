@@ -47,6 +47,9 @@ class DatabaseService {
   get users(): Collection<User> {
     return this.db.collection(process.env.DB_USERS_COLLECTION as string);
   }
+  get blogs(): Collection {
+    return this.db.collection(process.env.DB_BLOGS_COLLECTION as string);
+  }
 }
 const databaseService = new DatabaseService();
 export default databaseService;

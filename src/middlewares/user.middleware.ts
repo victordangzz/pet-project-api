@@ -12,6 +12,8 @@ import userService from "../services/user.service";
 import { verifyToken } from "../utils/jwt";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { capitalize } from "lodash";
+import { verifyAccessToken } from "../utils/common";
+import { TokenPayLoad } from "~/models/dto/User.requests";
 const emailSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USER_MESSAGE.EMAIL_IS_REQUIRED,
@@ -347,54 +349,32 @@ export const verifyEmailTokenValidator = validate(
     ["body"]
   )
 );
-
-// Middleware để authenticate user từ access token
 export const accessTokenValidator = validate(
   checkSchema(
     {
-      authorization: {
+      Authorization: {
         trim: true,
         custom: {
           options: async (value: string, { req }) => {
-            const access_token = (value || "").replace("Bearer ", "");
-            if (!access_token) {
-              throw new ErrorsWithStatus({
-                message: USER_MESSAGE.ACCESS_TOKEN_IS_REQUIRED,
-                status: HTTP_STATUS_CODE.UNAUTHORIZED,
-              });
-            }
-            try {
-              const decode_authorization = await verifyToken({
-                token: access_token,
-                secretOrPublicKey: process.env.ACCESS_TOKEN_SECRET as string,
-              });
-
-              const { user_id } = decode_authorization;
-              const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) });
-
-              if (user === null) {
-                throw new ErrorsWithStatus({
-                  message: USER_MESSAGE.USER_NOT_FOUND,
-                  status: HTTP_STATUS_CODE.UNAUTHORIZED,
-                });
-              }
-
-              (req as Request).decode_authorization = decode_authorization;
-              (req as Request).user = user;
-            } catch (error) {
-              if (error instanceof JsonWebTokenError) {
-                throw new ErrorsWithStatus({
-                  message: capitalize(error.message),
-                  status: HTTP_STATUS_CODE.UNAUTHORIZED,
-                });
-              }
-              throw error;
-            }
-            return true;
-          },
-        },
-      },
+            const access_token = (value || '').split(' ')[1]
+            return await verifyAccessToken(access_token, req as Request)
+          }
+        }
+      }
     },
-    ["headers"]
+    ['headers']
   )
-);
+)
+
+export const verifiedUserValidator = (req: Request, res: Response, next: NextFunction) => {
+  const { verify } = req.decode_authorization as TokenPayLoad
+  if (verify !== UserVerifyStatus.Verified) {
+    return next(
+      new ErrorsWithStatus({
+        message: USER_MESSAGE.VERIFY_USER_INVALID,
+        status: HTTP_STATUS_CODE.FORBIDDEN
+      })
+    )
+  }
+  next()
+}

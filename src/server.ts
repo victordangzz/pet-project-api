@@ -6,6 +6,7 @@ import cors from "cors";
 import usersRouter from "./routes/user.routes";
 import { PATH } from "./constants/path";
 import { defaultErrorHandle } from "./middlewares/error.middleware";
+import blogsRouter from "./routes/blog.routes";
 databaseService.connect().then(() => {
   databaseService.indexUsers();
 });
@@ -20,7 +21,7 @@ app.use(
 );
 app.use(express.json());
 app.use(PATH.USER, usersRouter);
-
+app.use(PATH.BLOGS, blogsRouter);
 // Error handler middleware phải đặt cuối cùng
 app.use(defaultErrorHandle);
 
